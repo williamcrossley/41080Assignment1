@@ -37,6 +37,15 @@ VALID = [
     "(λx.x y)",
     "  x  ",
     " (a b) ",
+    "(((a b) c) d)",
+    "(a (b (c (d e))))",
+    "((× 2) 3)",
+    "λf.λx.(f (f x))",
+    "λa.λb.λc.λd.(a (b (c d)))",
+    "a-b1-c2-d3-e4-f5g6h7",
+    "1234567890123456789",
+    "(λadd.(add 1) +)",
+    "   (a (b c))   ",
 ]
 
 INVALID = [
@@ -58,6 +67,13 @@ INVALID = [
     "x\n",
     "λX.x",
     "λx.λy.",
+    "(× 2 3)",
+    "(a (b c) d)",
+    "(λx.x)",
+    "(((a b) c)",
+    "((a b) c))",
+    "λx.λy.(x y",
+    "(a (b c)",
 ]
 
 
@@ -89,6 +105,17 @@ class CliExitCodeTests(unittest.TestCase):
     def test_missing_argument_exits_nonzero(self):
         result = subprocess.run(
             [sys.executable, "proto_parser.py"],
+            capture_output=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_invalid_utf8_argument_exits_nonzero(self):
+        result = self.run_cli(chr(0xDCFF))
+        self.assertEqual(result.returncode, 1)
+
+    def test_invalid_argument_count_exits_nonzero(self):
+        result = subprocess.run(
+            [sys.executable, "proto_parser.py", "arg1", "arg2"],
             capture_output=True,
         )
         self.assertNotEqual(result.returncode, 0)

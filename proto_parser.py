@@ -101,7 +101,12 @@ def main():
     if len(sys.argv) != 2:
         print("Usage: python proto_parser.py <input-string>", file=sys.stderr)
         sys.exit(2)
-    sys.exit(0 if is_valid_proto(sys.argv[1]) else 1)
+    text = sys.argv[1]
+    try:
+        text.encode("utf-8")
+    except UnicodeEncodeError:
+        sys.exit(1)
+    sys.exit(0 if is_valid_proto(text) else 1)
 
 
 if __name__ == "__main__":
