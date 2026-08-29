@@ -1,0 +1,11 @@
+HOW TO RUN TESTS:
+With Python installed:
+pytest <relative path to test_proto_parser.py>
+
+HOW TO RUN PARSER:
+cd <parser folder>
+run python proto_parser.py <stringToTest> 
+
+TO SEE RESULT:
+powershell:
+Write-Output $LASTEXITCODE
